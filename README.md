@@ -1,10 +1,11 @@
 # GitHub Action for Bundeling, Micro-batching and Deploying Machine Learning Models to Delphai Cluster 
+[<img src="https://www.cengn.ca/wp-content/uploads/2017/11/docker.png" width="600px" margin-left="-5px">](https://github.com/delphai/machine-learning-deployment)
 
 ## Usage
 
 This repository contains GitHub Action for Model serving in production using bentoML and deploying Machine Learning Models to Delphai kubernetes clusters and creates a real-time endpoint/domain on the model to integrate models in other systems.
 
-This Pipeline Steps are the following:
+## This pipeline steps are the following:
 
 - Authenticate to Azure 
 - Clone the entry script
