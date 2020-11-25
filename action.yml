@@ -1,0 +1,32 @@
+name: "Deploy delphai microservices to Azure kubernetes in delphai's Infrastructure"
+description: "Deploy delphai microservices to Azure kubernetes in delphai's Infrastructure"
+author: 'delpahi/devops'
+inputs:
+  client_id:
+    description: 'Azure Service Principle Client ID'
+    required: true
+  client_secret:
+    description: 'Azure Service Principle Client Secret'
+    required: true
+  tenant_id:
+    description: 'Azure Service Principle Tenant ID'
+    required: true
+  github_token:
+    description: 'The Githib token that allows repo cloning'
+    required: true
+  repo_name:
+    description: 'Your Repository name that contains the entry script'
+    required: true
+  blob_model:
+    description: 'The name of the container in the blob'
+    required: true
+  connection_string:
+    description: 'The Connection String that alllows download from the blob'
+    required: true
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+branding:
+  icon: 'anchor'
+  color: 'blue'
