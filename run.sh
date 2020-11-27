@@ -6,6 +6,7 @@ REPO_URL="https://ahmedmahmo:$INPUT_GITHUB_TOKEN@github.com/delphai/$INPUT_REPO_
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 
 # 1 - Authenticate to Azure
+cd /app
 echo "Authenticating to Azure...."
 az login --service-principal --username $INPUT_CLIENT_ID --password $INPUT_CLIENT_SECRET --tenant $INPUT_TENANT_ID
 echo "Azure Authentication complete."
@@ -22,6 +23,7 @@ fi
 
 # 2 - Clone Repo 
 echo "cloning $INPUT_REPO_NAME...."
+cd /app
 git clone ${REPO_URL}
 echo "$INPUT_REPO_NAME cloned."
 
