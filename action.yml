@@ -17,6 +17,9 @@ inputs:
   repo_name:
     description: 'Your Repository name that contains the entry script'
     required: true
+  class_name:
+    description: 'The name of the calss that serves your service'
+    required: true
   blob_model:
     description: 'The name of the container in the blob'
     required: true
