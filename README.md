@@ -1,5 +1,5 @@
 # GitHub Action for Bundeling, Micro-batching and Deploying Machine Learning Models to Delphai Cluster 
-[<img src="https://www.cengn.ca/wp-content/uploads/2017/11/docker.png" width="600px" margin-left="-5px">](https://github.com/delphai/machine-learning-deployment)
+[<img src="https://www.cengn.ca/wp-content/uploads/2017/11/docker.png" width="800px" margin-left="-5px">](https://github.com/delphai/machine-learning-deployment)
 
 ## Usage
 
