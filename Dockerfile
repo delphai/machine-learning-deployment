@@ -1,3 +1,4 @@
-FROM delphairegistry/dind-az-kctl-helm:v1
+FROM delphairegistry/dind-az-kctl-helm:v1.1
+
 COPY . /app
 CMD /app/run.sh
