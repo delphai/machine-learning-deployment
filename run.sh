@@ -23,12 +23,11 @@ fi
 
 # 2 - Clone Repo 
 echo "cloning $INPUT_REPO_NAME...."
-cd /app
 git clone ${REPO_URL}
 echo "$INPUT_REPO_NAME cloned."
 
 # Change Directory to the repo
-cd "${DIR}/$INPUT_REPO_NAME" || exit
+cd /app/$INPUT_REPO_NAME || exit
 
 # 3 - Download the Model
 echo "Given Model name is $INPUT_BLOB_MODEL"

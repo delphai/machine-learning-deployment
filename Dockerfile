@@ -1,3 +1,3 @@
 FROM delphairegistry/dind-az-kctl-helm:v1.1
 COPY . /app
-CMD /app/run.sh
+CMD /app/test.sh
