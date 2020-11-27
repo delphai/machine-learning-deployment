@@ -28,6 +28,8 @@ echo "$INPUT_REPO_NAME cloned."
 
 # Change Directory to the repo
 cd /app/$INPUT_REPO_NAME || exit
+echo "Current dircetory is:"
+pwd
 
 # 3 - Download the Model
 echo "Given Model name is $INPUT_BLOB_MODEL"
@@ -35,6 +37,10 @@ echo "Downloading Model from Azure blob..."
 az storage blob download-batch -d . -s $INPUT_BLOB_MODEL --account-name tfdelphaicommon --connection-string $INPUT_CONNECTION_STRING
 echo "Model $INPUT_BLOB_MODEL successfully downloaded."
 
+# 4 - Install dependencies 
+pip3 install --upgrade pip 
+pipenv lock -r > requirements.txt
+python3.8 -m pip install -r requirements.txt
 # 4 - Bundel the model
 
 echo "BentoML Bundeling..."

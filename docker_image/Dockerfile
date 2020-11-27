@@ -13,3 +13,4 @@ RUN pip3 --version
 RUN pip3 install bentoml
 RUN apt install bash
 RUN apt-get install jq -y
+RUN python3.8 -m pip install pipenv 
