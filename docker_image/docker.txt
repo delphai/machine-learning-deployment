@@ -1,0 +1,55 @@
+##### Base one
+FROM docker:18.03.1-dind
+
+RUN mkdir /root/.azure /azure-cli
+VOLUME /root/.azure
+WORKDIR /azure-cli
+
+RUN \
+  apk add --no-cache curl libffi python3-dev bash openssh ca-certificates jq openssl && \
+  apk add --no-cache --virtual .build-deps gcc make openssl-dev libffi-dev musl-dev && \
+  update-ca-certificates && \
+  ln -s /usr/bin/python3.6 /usr/bin/python && \
+  ln -s /usr/bin/pip3 /usr/bin/pip && \
+  pip install --no-cache-dir --upgrade jmespath-terminal && \
+  curl -L https://aka.ms/InstallAzureCli | \
+    sed -e "s/tmp_XXXX/tmp_XXXXXX/g" \
+      -e "s/\/dev\/tty/config.txt/g" > install.sh && \
+  chmod +x install.sh && \
+  echo /azure-cli/lib >> config.txt && \
+  echo /azure-cli/bin >> config.txt && \
+  echo y >> config.txt && \
+  ./install.sh && \
+  cat /azure-cli/lib/az.completion > ~/.bashrc && \
+  runDeps="$( \
+    scanelf --needed --nobanner --recursive /usr/local \
+        | awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' \
+        | sort -u \
+        | xargs -r apk info --installed \
+        | sort -u \
+    )"  && \  
+  apk add --virtual .rundeps $runDeps && \
+  apk del .build-deps
+
+WORKDIR /
+ENV PATH $PATH:/azure-cli/bin
+
+CMD bash
+
+
+#### Base two
+
+FROM teracy/ubuntu:18.04-dind-latest
+WORKDIR /app
+RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
+RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.19.0/bin/linux/amd64/kubectl
+RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+RUN chmod 700 get_helm.sh
+RUN  ./get_helm.sh
+RUN apt update && apt install software-properties-common -y
+RUN add-apt-repository ppa:deadsnakes/ppa -y
+RUN apt install python3.8 -y
+RUN apt update && apt install python3-pip -y
+RUN pip3 --version
+RUN pip3 install bentoml
+RUN apt install bash
