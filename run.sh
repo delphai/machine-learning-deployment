@@ -90,4 +90,3 @@ helm upgrade --install --atomic --reset-values\
     --set delphaiEnvironment=common \
     --set minScale=0
     
-kubectl patch deployment $INPUT_REPO_NAME --namespace $INPUT_REPO_NAME -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}"
