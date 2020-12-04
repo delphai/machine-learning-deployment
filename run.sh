@@ -38,13 +38,11 @@ az storage blob download-batch -d . -s $INPUT_BLOB_MODEL --account-name tfdelpha
 echo "Model $INPUT_BLOB_MODEL successfully downloaded."
 
 # 4 - Install dependencies 
-pip3 install --upgrade pip 
-pipenv lock -r > requirements.txt
-python3.8 -m pip install -r requirements.txt
+pipenv install
 
 # 4 - Bundel the model
 echo "BentoML Bundeling..."
-python3.8 /app/$INPUT_REPO_NAME/src/save.py
+pipenv run python /app/$INPUT_REPO_NAME/src/save.py
 echo "Successfully bundeled."
 
 # 5 - Build Docker Image 
