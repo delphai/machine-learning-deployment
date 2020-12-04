@@ -2,6 +2,8 @@ FROM teracy/ubuntu:18.04-dind-latest
 WORKDIR /app
 RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.19.0/bin/linux/amd64/kubectl
+RUN chmod +x ./kubectl
+RUN mv ./kubectl /usr/local/bin/kubectl
 RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
 RUN chmod 700 get_helm.sh
 RUN  ./get_helm.sh
