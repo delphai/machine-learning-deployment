@@ -19,9 +19,9 @@ This repository contains GitHub Action for Model serving in production using ben
 
 ## Requirments
 
-- pipenv
+### pipenv
 
-**Please note the following:**
+Please note the following:
 
 Make sure to create a Pipfile and add the required `dependencies` for your model entry script
 
@@ -58,7 +58,7 @@ tensorflow = "*"
 python_version = "3.8"
 ```
 
-- save.py
+### save.py
 
 Please make sure to name the bundling file `save.py` 
 
@@ -98,7 +98,7 @@ from bentoml.frameworks.sklearn import SklearnModelArtifact
 from my_library import preprocess
 
 @env(infer_pip_packages=True)
-@artifacts([SklearnModelArtifact('my_model')])
+@artifacts([SklearnModelArtifact('model')])
 class MyPredictionService(BentoService):
     """
     A simple prediction service exposing a Scikit-learn model
@@ -122,6 +122,18 @@ class, pack it with your trained model, and persist the entire prediction servic
 
 
 Make Sure you provide the model name **Exactly** as it is on Azure Blob.
+
+## Before you push
+
+Please test the `bentoML` locally first. 
+
+
+```
+1. pip install --pre -U bentoml
+2. python3 src/save.py
+3. saved_path=$(bentoml get IrisClassifier:latest --print-location --quiet)
+4. bentoml serve $saved_path
+```
 
 
 ## Workflow Example
