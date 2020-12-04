@@ -65,7 +65,7 @@ docker login ${REGISTRY} -u ${REGISTRY_USERNAME} -p ${REGISTRY_PASSWORD}
 echo "Docker Successfilly authenticated."
 echo "Pushing Image to delphai registry..."
 docker push ${REGISTRY}/$INPUT_REPO_NAME:latest
-IMAGE=docker inspect --format='{{index .RepoDigests 0}}' delphaicommon.azurecr.io/$INPUT_REPO_NAME:latest
+IMAGE=$(docker inspect --format='{{index .RepoDigests 0}}' delphaicommon.azurecr.io/$INPUT_REPO_NAME:latest)
 
 # 7 - Set Kubernetes Kontext
 echo "Setting Kubernetes Kontext..."
