@@ -38,6 +38,7 @@ az storage blob download-batch -d . -s $INPUT_BLOB_MODEL --account-name tfdelpha
 echo "Model $INPUT_BLOB_MODEL successfully downloaded."
 
 # 4 - Install dependencies 
+pipenv install --dev
 pipenv install
 
 # 4 - Bundel the model
