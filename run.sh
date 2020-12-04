@@ -81,13 +81,11 @@ helm repo add delphai https://delphai.github.io/helm-charts && helm repo update
 echo "Using helm delphai-knative service"
     helm upgrade --install --wait --atomic \
           $INPUT_REPO_NAME \
-          delphai/delphai-knative-service \
+          delphai/delphai-machine-learning \
           --namespace=$INPUT_REPO_NAME \
           --set image=${IMAGE} \
           --set httpPort=5000 \
           --set grpcPort=8080 \
-          --set isPublic=true \
-          --set isUi=false \
           --set domain=${DOMAIN} \
           --set delphaiEnvironment=common
 
