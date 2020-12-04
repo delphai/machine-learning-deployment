@@ -40,10 +40,9 @@ echo "Model $INPUT_BLOB_MODEL successfully downloaded."
 # 4 - Install dependencies 
 echo "Install dependencies..."
 python3 -V
-apt install python2 -y
-pipenv --python 3.8 install --dev
-pipenv --python 3.8 install
-
+python -V
+pipenv lock -r > requirements.txt
+pip3 install -r requirements.txt
 # 4 - Bundel the model
 echo "BentoML Bundeling..."
 pipenv run python3.8 /app/$INPUT_REPO_NAME/src/save.py

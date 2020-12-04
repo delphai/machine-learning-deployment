@@ -15,5 +15,7 @@ RUN apt install bash
 RUN apt-get update -y
 RUN apt-get install jq -y
 RUN apt-get install -y python-dev -y
-RUN python3.8 -m pip install pipenv 
+RUN python3.8 -m pip install pipenv
+RUN apt install python-minimal 
 RUN apt-get update -y
+CMD python -V
