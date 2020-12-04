@@ -19,4 +19,6 @@ RUN apt-get install -y python3-dev -y
 RUN python3.8 -m pip install pipenv
 RUN apt install python-minimal 
 RUN apt-get update -y
-CMD python -V
+RUN apt-get install python-dev -y
+RUN apt-get install python3.8-dev -y
+
