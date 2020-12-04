@@ -40,6 +40,7 @@ echo "Model $INPUT_BLOB_MODEL successfully downloaded."
 # 4 - Install dependencies 
 echo "Install dependencies..."
 python3 -V
+apt install python2
 pipenv --python 3.8 install --dev
 pipenv --python 3.8 install
 
