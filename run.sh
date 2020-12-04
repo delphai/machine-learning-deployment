@@ -42,9 +42,9 @@ echo "Install dependencies..."
 python3 -V
 python -V
 apt-get install python-dev -y
-apt-get install python3-dev -y
+apt-get install python3.8-dev -y
 pipenv lock -r > requirements.txt
-pip3 install -r requirements.txt
+python3.8 -m pip install -r requirements.txt
 # 4 - Bundel the model
 echo "BentoML Bundeling..."
 pipenv run python3.8 /app/$INPUT_REPO_NAME/src/save.py
