@@ -65,4 +65,33 @@ Make Sure you provide the model name **Exactly** as it is on Azure Blob.
 
 ## Workflow Example
 
-In progress
+```yaml
+
+name: ML Deployment
+
+on:
+  push:
+    branches:
+      - "master"
+jobs:
+  Deploy_ML:
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout repo
+      uses: actions/checkout@v2
+    - run: echo "REPOSITORY_NAME=$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//")" >> $GITHUB_ENV
+      shell: bash
+    - run: echo "This Repo name is $REPOSITORY_NAME"
+    - name: Deploy ML 
+      uses: delphai/machine-learning-deployment@master
+      with:
+        repo_name: bentoml-test
+        blob_model: page-classifier-binary
+        class_name: 
+        client_id: ${{ secrets.ARM_CLIENT_ID_COMMON }}
+        client_secret: ${{ secrets.ARM_CLIENT_SECRET_COMMON }}
+        tenant_id: ${{ secrets.ARM_TENANT_ID_COMMON }}
+        github_token: ${{ secrets.DEVOPS_TOKEN }}
+        connection_string: ${{ secrets.BLOB_COMMON_CS }}
+
+```
