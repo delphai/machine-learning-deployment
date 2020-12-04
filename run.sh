@@ -78,15 +78,16 @@ echo "Deploying to kubernetes..."
 kubectl create namespace $INPUT_REPO_NAME --output yaml --dry-run=client | kubectl apply -f -
 kubectl patch serviceaccount default --namespace $INPUT_REPO_NAME -p "{\"imagePullSecrets\": [{\"name\": \"acr-credentials\"}]}"
 helm repo add delphai https://delphai.github.io/helm-charts && helm repo update
-echo "Using helm delphai-knative service"
-    helm upgrade --install --wait --atomic \
-          $INPUT_REPO_NAME \
-          delphai/delphai-machine-learning \
-          --namespace=$INPUT_REPO_NAME \
-          --set image=${IMAGE} \
-          --set httpPort=5000 \
-          --set grpcPort=8080 \
-          --set domain=${DOMAIN} \
-          --set delphaiEnvironment=common
 
+echo "Using helm delphai-machine-learning"
+helm upgrade --install --atomic  --wait --reset-values\
+    $INPUT_REPO_NAME \
+    ./charts/delphai-machine-learning \
+    --namespace=$INPUT_REPO_NAME \
+    --set domain=${DOMAIN} \
+    --set image=${IMAGE} \
+    --set httpPort=5000 \
+    --set delphaiEnvironment=common \
+    --set minScale=0
+    
 kubectl patch deployment $INPUT_REPO_NAME --namespace $INPUT_REPO_NAME -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}"
