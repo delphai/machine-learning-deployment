@@ -5,6 +5,7 @@
 
 This repository contains GitHub Action for Model serving in production using bentoML and deploying Machine Learning Models to Delphai kubernetes clusters and creates a real-time endpoint/domain on the model to integrate models in other systems.
 
+
 ## This pipeline steps are the following:
 
 - Authenticate to Azure 
@@ -15,6 +16,71 @@ This repository contains GitHub Action for Model serving in production using ben
 - Build docker image 
 - Push docker image to delphai container registiry
 - Deploy to kubernetes using helm and knative
+
+## Requirments
+
+- pipenv
+
+**Please note the following:**
+
+Make sure to create a Pipfile and add the required `dependencies` for your model entry script
+
+Make sure that python version is `3.8`
+
+Make sure to run `pipenv install` before pushing to the repo so the `Pipfile.lock` is ready.
+
+```
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+yapf = "*"
+flake8 = "*"
+pep8-naming = "*"
+pytest = "*"
+mypy = "*"
+ipython = "*"
+mongomock = "*"
+grpc-stubs = "*"
+pylint = "*"
+
+[packages]
+
+bentoml = "*"
+transformers = "*"
+torch = "*"
+keras = "*"
+tensorflow = "*"
+
+[requires]
+python_version = "3.8"
+```
+
+- save.py
+
+Please make sure to name the bundling file `save.py` 
+
+Example for `save.py`
+
+```python
+from main import TransformerService
+from pathlib import Path
+from transformers import BertTokenizer, BertForSequenceClassification
+
+ts = TransformerService()
+source = Path(__file__).parent.parent
+
+model_dir = f'{source}/<MODEL NAME EXACTLY AS IN AZURE BLOB>'
+model = BertForSequenceClassification.from_pretrained(model_dir)
+tokenizer = BertTokenizer.from_pretrained(model_dir)
+
+artifact = {"model": model, "tokenizer": tokenizer}
+ts.pack("model",artifact)
+saved_path = ts.save()
+```
+
 
 ## Example for bentoML script
 
@@ -53,12 +119,7 @@ At the end of your model training pipeline, import your BentoML prediction servi
 class, pack it with your trained model, and persist the entire prediction service with
 `save` call at the end:
 
-```python
-from my_prediction_service import MyPredictionService
-svc = MyPredictionService()
-svc.pack('my_model', my_sklearn_model)
-svc.save()  # default saves to ~/bentoml/repository/MyPredictionService/{version}/
-```
+
 
 Make Sure you provide the model name **Exactly** as it is on Azure Blob.
 

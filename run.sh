@@ -52,13 +52,15 @@ echo "Successfully bundeled."
 echo "Start Building BentoML image..."
 SAVED_PATH=$(bentoml get $INPUT_CLASS_NAME:latest --print-location --quiet)
 echo "Saved path for bundeled app is ${SAVED_PATH}"
-docker build -t $INPUT_REPO_NAME:latest ${SAVED_PATH}
+
+echo "Building docker image..."
+REGISTRY=delphaicommon.azurecr.io
+docker build -t ${REGISTRY}/$INPUT_REPO_NAME:latest ${SAVED_PATH}
 
 # 6 - Push docker image
 echo "Authenticating Docker..."
 REGISTRY_PASSWORD=$(az acr credential show -n delphaicommon | jq .passwords | jq '.[0]' | jq .value -r)
 REGISTRY_USERNAME=$(az acr credential show -n delphaicommon | jq .username -r)
-REGISTRY=delphaicommon.azurecr.io
 docker login ${REGISTRY} -u ${REGISTRY_USERNAME} -p ${REGISTRY_PASSWORD} 
 echo "Docker Successfilly authenticated."
 echo "Pushing Image to delphai registry..."
