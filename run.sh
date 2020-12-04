@@ -82,7 +82,7 @@ helm repo add delphai https://delphai.github.io/helm-charts && helm repo update
 echo "Using helm delphai-machine-learning"
 helm upgrade --install --atomic  --wait --reset-values\
     $INPUT_REPO_NAME \
-    ./charts/delphai-machine-learning \
+    delphai-machine-learning \
     --namespace=$INPUT_REPO_NAME \
     --set domain=${DOMAIN} \
     --set image=${IMAGE} \
