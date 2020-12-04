@@ -41,6 +41,8 @@ echo "Model $INPUT_BLOB_MODEL successfully downloaded."
 echo "Install dependencies..."
 python3 -V
 python -V
+apt-get install python-dev -y
+apt-get install python3-dev -y
 pipenv lock -r > requirements.txt
 pip3 install -r requirements.txt
 # 4 - Bundel the model
