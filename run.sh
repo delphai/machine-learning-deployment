@@ -80,7 +80,7 @@ kubectl patch serviceaccount default --namespace $INPUT_REPO_NAME -p "{\"imagePu
 helm repo add delphai https://delphai.github.io/helm-charts && helm repo update
 
 echo "Using helm delphai-machine-learning"
-helm upgrade --install --atomic  --wait --reset-values\
+helm upgrade --install --atomic --reset-values\
     $INPUT_REPO_NAME \
     delphai/delphai-machine-learning \
     --namespace=$INPUT_REPO_NAME \
