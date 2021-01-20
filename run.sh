@@ -79,14 +79,22 @@ kubectl create namespace $INPUT_REPO_NAME --output yaml --dry-run=client | kubec
 kubectl patch serviceaccount default --namespace $INPUT_REPO_NAME -p "{\"imagePullSecrets\": [{\"name\": \"acr-credentials\"}]}"
 helm repo add delphai https://delphai.github.io/helm-charts && helm repo update
 
+#Allow Deployment from branch
+if [ "$GITHUB_REF_SLUG" = "master" ] || [ "$INPUT_DELPHAI_ENVIROMENT" == "GREEN" ] || [ "$INPUT_DELPHAI_ENVIROMENT" == "LIVE" ]; then
+    RELEASE_NAME=$REPOSITORY_NAME
+else
+    RELEASE_NAME="$REPOSITORY_NAME-$GITHUB_REF_SLUG"
+fi
+
 echo "Using helm delphai-machine-learning"
 helm upgrade --install --atomic --reset-values\
-    $INPUT_REPO_NAME \
+    ${RELEASE_NAME} \
     delphai/delphai-machine-learning \
     --namespace=$INPUT_REPO_NAME \
     --set domain=${DOMAIN} \
     --set image=${IMAGE} \
     --set httpPort=5000 \
     --set delphaiEnvironment=common \
-    --set minScale=0
+    --set minScale=1 \
+    --set concurrency=50
     
