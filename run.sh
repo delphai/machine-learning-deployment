@@ -75,14 +75,14 @@ kubectl patch serviceaccount default --namespace $INPUT_REPO_NAME -p "{\"imagePu
 helm repo add delphai https://delphai.github.io/helm-charts && helm repo update
 
 echo "Using helm delphai-machine-learning"
-helm upgrade --install --atomic --reset-values\
-    $INPUT_REPO_NAME \
+  
+helm upgrade --install --atomic  --reset-values\
+    $INPUT_REPO_NAME\
     delphai/delphai-machine-learning \
     --namespace=$INPUT_REPO_NAME \
     --set domain=${DOMAIN} \
     --set image=${IMAGE} \
     --set httpPort=5000 \
-    --set delphaiEnvironment=ML \
-    --set --set concurrency=50 \
-    --set minScale=0
-    
+    --set delphaiEnvironment=common \
+    --set minScale=1 \
+    --set concurrency=50
