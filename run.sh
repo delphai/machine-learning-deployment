@@ -85,4 +85,4 @@ helm upgrade --install --atomic  --reset-values\
     --set httpPort=5000 \
     --set delphaiEnvironment=common \
     --set minScale=1 \
-    --set concurrency=50
+    --set concurrency=10
