@@ -83,7 +83,7 @@ helm repo add delphai https://delphai.github.io/helm-charts && helm repo update
 if [ "$GITHUB_REF_SLUG" = "master" ] || [ "$INPUT_DELPHAI_ENVIROMENT" == "GREEN" ] || [ "$INPUT_DELPHAI_ENVIROMENT" == "LIVE" ]; then
     RELEASE_NAME=$REPOSITORY_NAME
 else
-    RELEASE_NAME="$REPOSITORY_NAME-$GITHUB_REF_SLUG"
+    RELEASE_NAME="$REPOSITORY_NAME"
 fi
 
 echo "Using helm delphai-machine-learning"
