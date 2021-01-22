@@ -15,13 +15,7 @@ echo "Azure Authentication complete."
 # Check Subscription
 echo "Checking Subscription..."
 SUBSCRIPTION=$(az account show | jq .name -r)
-if [ "$SUBSCRIPTION" == "common" ]; then
-    echo "Subscription is ${SUBSCRIPTION}"
-else
-    echo "Subscription not set correctly -> Exit"
-    exit
-fi
-
+echo "${SUBSCRIPTION}"
 # 2 - Clone Repo 
 echo "cloning $INPUT_REPO_NAME...."
 git clone ${REPO_URL}
