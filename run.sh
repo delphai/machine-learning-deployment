@@ -94,7 +94,7 @@ helm upgrade --install --atomic --reset-values\
     --set domain=${DOMAIN} \
     --set image=${IMAGE} \
     --set httpPort=5000 \
-    --set delphaiEnvironment=common \
-    --set minScale=1 \
+    --set delphaiEnvironment=ML \
+    --set minScale=0 \
     --set concurrency=50
     
