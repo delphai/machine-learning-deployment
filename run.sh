@@ -3,7 +3,7 @@
 
 set -e
 # Variables
-REPO_URL="https://ahmedmahmo:$INPUT_GITHUB_TOKEN@github.com/delphai/$INPUT_REPO_NAME"
+REPO_URL="https://ahmedmahmo:$INPUT_GITHUB_TOKEN@github.com/delphai/$REPOSITORY_NAME"
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 
 # 1 - Authenticate to Azure
@@ -19,10 +19,10 @@ echo "${SUBSCRIPTION}"
 # 2 - Clone Repo 
 echo "cloning $REPOSITORY_NAME...."
 git clone ${REPO_URL}
-echo "$INPUT_REPO_NAME cloned."
+echo "$REPOSITORY_NAME cloned."
 
 # Change Directory to the repo
-cd /app/$INPUT_REPO_NAME || exit
+cd /app/$REPOSITORY_NAME || exit
 echo "Current dircetory is:"
 pwd
 
@@ -40,7 +40,7 @@ pipenv lock -r > requirements.txt
 python3.8 -m pip install -r requirements.txt
 # 4 - Bundel the model
 echo "BentoML Bundeling..."
-python3.8 /app/$INPUT_REPO_NAME/src/save.py
+python3.8 /app/$REPOSITORY_NAME/src/save.py
 echo "Successfully bundeled."
 
 # 5 - Build Docker Image 
@@ -50,7 +50,7 @@ echo "Saved path for bundeled app is ${SAVED_PATH}"
 
 echo "Building docker image..."
 REGISTRY=delphaicommon.azurecr.io
-docker build -t ${REGISTRY}/$INPUT_REPO_NAME:latest ${SAVED_PATH}
+docker build -t ${REGISTRY}/$REPOSITORY_NAME:latest ${SAVED_PATH}
 
 # 6 - Push docker image
 echo "Authenticating Docker..."
@@ -59,8 +59,8 @@ REGISTRY_USERNAME=$(az acr credential show -n delphaicommon | jq .username -r)
 docker login ${REGISTRY} -u ${REGISTRY_USERNAME} -p ${REGISTRY_PASSWORD} 
 echo "Docker Successfilly authenticated."
 echo "Pushing Image to delphai registry..."
-docker push ${REGISTRY}/$INPUT_REPO_NAME:latest
-IMAGE=$(docker inspect --format='{{index .RepoDigests 0}}' delphaicommon.azurecr.io/$INPUT_REPO_NAME:latest)
+docker push ${REGISTRY}/$REPOSITORY_NAME:latest
+IMAGE=$(docker inspect --format='{{index .RepoDigests 0}}' delphaicommon.azurecr.io/$REPOSITORY_NAME:latest)
 
 # 7 - Set Kubernetes Kontext
 echo "Setting Kubernetes Kontext..."
@@ -70,19 +70,19 @@ DOMAIN=$(kubectl get secret domain -o json --namespace default | jq .data.domain
 
 # 8 - Deploy to kubernetes
 echo "Deploying to kubernetes..."
-kubectl create namespace $INPUT_REPO_NAME --output yaml --dry-run=client | kubectl apply -f -
-kubectl patch serviceaccount default --namespace $INPUT_REPO_NAME -p "{\"imagePullSecrets\": [{\"name\": \"acr-credentials\"}]}"
+kubectl create namespace $REPOSITORY_NAME --output yaml --dry-run=client | kubectl apply -f -
+kubectl patch serviceaccount default --namespace $REPOSITORY_NAME -p "{\"imagePullSecrets\": [{\"name\": \"acr-credentials\"}]}"
 helm repo add delphai https://delphai.github.io/helm-charts && helm repo update
 
 echo "Using helm delphai-machine-learning"
   
 helm upgrade --install --atomic  --reset-values\
-    $INPUT_REPO_NAME\
+    $REPOSITORY_NAME\
     delphai/delphai-machine-learning \
-    --namespace=$INPUT_REPO_NAME \
+    --namespace=$REPOSITORY_NAME \
     --set domain=${DOMAIN} \
     --set image=${IMAGE} \
     --set httpPort=5000 \
     --set delphaiEnvironment=common \
     --set minScale=1 \
-    --set concurrency=10
+    --set concurrency=50
