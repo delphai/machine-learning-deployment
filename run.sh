@@ -17,7 +17,7 @@ echo "Checking Subscription..."
 SUBSCRIPTION=$(az account show | jq .name -r)
 echo "${SUBSCRIPTION}"
 # 2 - Clone Repo 
-echo "cloning $INPUT_REPO_NAME...."
+echo "cloning $REPOSITORY_NAME...."
 git clone ${REPO_URL}
 echo "$INPUT_REPO_NAME cloned."
 
