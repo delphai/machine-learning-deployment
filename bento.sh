@@ -49,6 +49,7 @@ SAVED_PATH=$(bentoml get $INPUT_CLASS_NAME:latest --print-location --quiet)
 echo "Saved path for bundeled app is ${SAVED_PATH}"
 
 # add cuda
+echo "Add Cuda"
 d=${SAVED_PATH}/Dockerfile
 cat << EOF >> $d                                                                                                            
 FROM nvidia/cuda:11.2.1-devel-ubuntu20.04
@@ -65,6 +66,7 @@ ENTRYPOINT [ "./docker-entrypoint.sh" ]
 CMD ["bentoml", "serve-gunicorn", "/app"]
 EOF
 
+cat ${SAVED_PATH}/Dockerfile
 echo "Building docker image..."
 REGISTRY=delphaicommon.azurecr.io
 docker build -t ${REGISTRY}/$REPOSITORY_NAME:latest ${SAVED_PATH}
