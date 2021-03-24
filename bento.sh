@@ -37,7 +37,7 @@ echo "Install dependencies..."
 python3 -V
 python -V
 pipenv lock -r > requirements.txt
-python3.8 -m pip install -r requirements.txt
+python3.8 -m pip --no-cache-dir install -r requirements.txt
 # 4 - Bundel the model
 echo "BentoML Bundeling..."
 python3.8 /app/$REPOSITORY_NAME/src/save.py
@@ -61,7 +61,7 @@ RUN apt-get update && apt-get install --no-install-recommends --no-install-sugge
     && apt-get install unzip \
     && apt-get -y install python3.8 \
     && apt-get -y install python3-pip
-RUN pip3 install --no-cache-di -r requirements.txt 
+RUN pip3 install --no-cache-dir -r requirements.txt 
 ENTRYPOINT [ "./docker-entrypoint.sh" ]
 CMD ["bentoml", "serve-gunicorn", "/app"]
 EOF
