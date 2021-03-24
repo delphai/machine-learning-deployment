@@ -51,34 +51,18 @@ echo "Saved path for bundeled app is ${SAVED_PATH}"
 # add cuda
 d=${SAVED_PATH}/Dockerfile
 cat << EOF >> $d                                                                                                            
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        gnupg2 curl ca-certificates && \
-        curl -fsSL https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub | apt-key add - && \
-        echo "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64 /" > /etc/apt/sources.list.d/cuda.list && \
-        echo "deb https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64 /" > /etc/apt/sources.list.d/nvidia-ml.list && \
-        apt-get purge --autoremove -y curl \
-        && rm -rf /var/lib/apt/lists/*
-
-ENV CUDA_VERSION 11.2.1
-
-# For libraries in the cuda-compat-* package: https://docs.nvidia.com/cuda/eula/index.html\#attachment-a
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    cuda-cudart-11-2=11.2.146-1 \
-    cuda-compat-11-2 \
-    && ln -s cuda-11.2 /usr/local/cuda && \
-    rm -rf /var/lib/apt/lists/*
-
-# Required for nvidia-docker v1
-RUN echo "/usr/local/nvidia/lib" >> /etc/ld.so.conf.d/nvidia.conf \
-    && echo "/usr/local/nvidia/lib64" >> /etc/ld.so.conf.d/nvidia.conf
-
-ENV PATH /usr/local/nvidia/bin:/usr/local/cuda/bin:${PATH}
-ENV LD_LIBRARY_PATH /usr/local/nvidia/lib:/usr/local/nvidia/lib64
-
-# nvidia-container-runtime
-ENV NVIDIA_VISIBLE_DEVICES all
-ENV NVIDIA_DRIVER_CAPABILITIES compute,utility
-ENV NVIDIA_REQUIRE_CUDA "cuda>=11.2 brand=tesla,driver>=418,driver<419 brand=tesla,driver>=440,driver<441 driver>=450,driver<451"
+FROM nvidia/cuda:11.2.1-devel-ubuntu20.04
+WORKDIR /app/
+ENV PORT 5000
+EXPOSE $PORT
+COPY --from=0 /bento .
+RUN apt-get update && apt-get install --no-install-recommends --no-install-suggests -y curl \
+    && apt-get install unzip \
+    && apt-get -y install python3.8 \
+    && apt-get -y install python3-pip
+RUN pip3 install -r requirements.txt && pip3 install bentoml
+ENTRYPOINT [ "./docker-entrypoint.sh" ]
+CMD ["bentoml", "serve-gunicorn", "/app"]
 EOF
 
 echo "Building docker image..."
