@@ -55,7 +55,7 @@ cat << EOF >> $d
 FROM nvidia/cuda:11.2.1-devel-ubuntu20.04
 WORKDIR /app/
 ENV PORT 5000
-EXPOSE $PORT
+EXPOSE \$PORT
 COPY --from=0 /bento .
 RUN apt-get update && apt-get install --no-install-recommends --no-install-suggests -y curl \
     && apt-get install unzip \
