@@ -61,7 +61,7 @@ RUN apt-get update && apt-get install --no-install-recommends --no-install-sugge
     && apt-get install unzip \
     && apt-get -y install python3.8 \
     && apt-get -y install python3-pip
-RUN pip3 install -r requirements.txt && pip3 install bentoml
+RUN pip3 install --no-cache-di -r requirements.txt 
 ENTRYPOINT [ "./docker-entrypoint.sh" ]
 CMD ["bentoml", "serve-gunicorn", "/app"]
 EOF
