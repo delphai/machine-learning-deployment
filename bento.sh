@@ -49,22 +49,22 @@ SAVED_PATH=$(bentoml get $INPUT_CLASS_NAME:latest --print-location --quiet)
 echo "Saved path for bundeled app is ${SAVED_PATH}"
 
 # add cuda
-echo "Add Cuda"
-d=${SAVED_PATH}/Dockerfile
-cat << EOF >> $d                                                                                                            
-FROM nvidia/cuda:11.2.1-devel-ubuntu20.04
-WORKDIR /app/
-ENV PORT 5000
-EXPOSE \$PORT
-COPY --from=0 /bento .
-RUN apt-get update && apt-get install --no-install-recommends --no-install-suggests -y curl \
-    && apt-get install unzip \
-    && apt-get -y install python3.8 \
-    && apt-get -y install python3-pip
-RUN pip3 install --no-cache-dir -r requirements.txt 
-ENTRYPOINT [ "./docker-entrypoint.sh" ]
-CMD ["bentoml", "serve-gunicorn", "/app"]
-EOF
+# echo "Add Cuda"
+# d=${SAVED_PATH}/Dockerfile
+# cat << EOF >> $d                                                                                                            
+# FROM nvidia/cuda:11.2.1-devel-ubuntu20.04
+# WORKDIR /app/
+# ENV PORT 5000
+# EXPOSE \$PORT
+# COPY --from=0 /bento .
+# RUN apt-get update && apt-get install --no-install-recommends --no-install-suggests -y curl \
+#     && apt-get install unzip \
+#     && apt-get -y install python3.8 \
+#     && apt-get -y install python3-pip
+# RUN pip3 install --no-cache-dir -r requirements.txt 
+# ENTRYPOINT [ "./docker-entrypoint.sh" ]
+# CMD ["bentoml", "serve-gunicorn", "/app"]
+# EOF
 
 cat ${SAVED_PATH}/Dockerfile
 echo "Building docker image..."
