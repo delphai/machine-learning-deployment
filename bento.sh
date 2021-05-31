@@ -65,9 +65,13 @@ IMAGE=$(docker inspect --format='{{index .RepoDigests 0}}' ${REGISTRY}/$REPOSITO
 
 # 7 - Set Kubernetes Kontext
 echo "Setting Kubernetes Kontext..."
-declare -A rg
-rg[delphai-common]=tf-cluster
-rg[delphai-hybrid]=tf-hybrid-cluster
+if [ "$INPUT_CLUSTER" == "delphai-common" ]; then
+    RG="tf-cluster"
+elif [ "$INPUT_CLUSTER" == "delphai-hybrid" ]; then
+    RG="tf-hybrid-cluster"
+fi
+
+
 az aks get-credentials -n $INPUT_CLUSTER -g ${rg[$INPUT_CLUSTER]}
 kubectl config current-context
 DOMAIN=$(kubectl get secret domain -o json --namespace default | jq .data.domain -r | base64 -d)
