@@ -65,9 +65,11 @@ set -e
 
 # 7 - Set Kubernetes Kontext
 echo "Setting Kubernetes Kontext to $INPUT_CLUSTER..."
-if [ "$INPUT_CLUSTER" == "delphai-common" ]; then
+
+if [ "$INPUT_CLUSTER" = "delphai-common" ]; then
     RG="tf-cluster"
-elif [ "$INPUT_CLUSTER" == "delphai-hybrid" ]; then
+fi
+if [ "$INPUT_CLUSTER" = "delphai-hybrid" ]; then
     RG="tf-hybrid-cluster"
 fi
 echo "${RG}"
