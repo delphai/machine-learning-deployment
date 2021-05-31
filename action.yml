@@ -26,7 +26,12 @@ inputs:
   connection_string:
     description: 'The Connection String that alllows download from the blob'
     required: true
-
+  cluster:
+    description: to which cluster you want to deploy
+    required: true
+  container_registry:
+    description: Container registry name
+    required: true
 runs:
   using: 'docker'
   image: 'Dockerfile'

@@ -48,33 +48,15 @@ echo "Start Building BentoML image..."
 SAVED_PATH=$(bentoml get $INPUT_CLASS_NAME:latest --print-location --quiet)
 echo "Saved path for bundeled app is ${SAVED_PATH}"
 
-# add cuda
-# echo "Add Cuda"
-# d=${SAVED_PATH}/Dockerfile
-# cat << EOF >> $d                                                                                                            
-# FROM nvidia/cuda:11.2.1-devel-ubuntu20.04
-# WORKDIR /app/
-# ENV PORT 5000
-# EXPOSE \$PORT
-# COPY --from=0 /bento .
-# RUN apt-get update && apt-get install --no-install-recommends --no-install-suggests -y curl \
-#     && apt-get install unzip \
-#     && apt-get -y install python3.8 \
-#     && apt-get -y install python3-pip
-# RUN pip3 install --no-cache-dir -r requirements.txt 
-# ENTRYPOINT [ "./docker-entrypoint.sh" ]
-# CMD ["bentoml", "serve-gunicorn", "/app"]
-# EOF
-
 cat ${SAVED_PATH}/Dockerfile
 echo "Building docker image..."
-REGISTRY=delphaicommon.azurecr.io
+REGISTRY=$INPUT_CONTAINER_REGISTRY.azurecr.io
 docker build -t ${REGISTRY}/$REPOSITORY_NAME:latest ${SAVED_PATH}
 
 # 6 - Push docker image
 echo "Authenticating Docker..."
-REGISTRY_PASSWORD=$(az acr credential show -n delphaicommon | jq .passwords | jq '.[0]' | jq .value -r)
-REGISTRY_USERNAME=$(az acr credential show -n delphaicommon | jq .username -r)
+REGISTRY_PASSWORD=$(az acr credential show -n $INPUT_CONTAINER_REGISTRY | jq .passwords | jq '.[0]' | jq .value -r)
+REGISTRY_USERNAME=$(az acr credential show -n $INPUT_CONTAINER_REGISTRY | jq .username -r)
 docker login ${REGISTRY} -u ${REGISTRY_USERNAME} -p ${REGISTRY_PASSWORD} 
 echo "Docker Successfilly authenticated."
 echo "Pushing Image to delphai registry..."
@@ -83,7 +65,8 @@ IMAGE=$(docker inspect --format='{{index .RepoDigests 0}}' delphaicommon.azurecr
 
 # 7 - Set Kubernetes Kontext
 echo "Setting Kubernetes Kontext..."
-az aks get-credentials -n delphai-common -g tf-cluster 
+rg=( ["delphai-common"]="tf-cluster" ["delphai-hybrid"]="tf-hybrid-cluster")
+az aks get-credentials -n $INPUT_CLUSTER -g ${rg[$$INPUT_CLUSTER]}
 kubectl config current-context
 DOMAIN=$(kubectl get secret domain -o json --namespace default | jq .data.domain -r | base64 -d)
 
