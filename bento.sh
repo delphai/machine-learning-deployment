@@ -70,9 +70,8 @@ if [ "$INPUT_CLUSTER" == "delphai-common" ]; then
 elif [ "$INPUT_CLUSTER" == "delphai-hybrid" ]; then
     RG="tf-hybrid-cluster"
 fi
-
-
-az aks get-credentials -n $INPUT_CLUSTER -g ${rg[$INPUT_CLUSTER]}
+echo "${RG}"
+az aks get-credentials -n $INPUT_CLUSTER -g ${RG}
 kubectl config current-context
 DOMAIN=$(kubectl get secret domain -o json --namespace default | jq .data.domain -r | base64 -d)
 
